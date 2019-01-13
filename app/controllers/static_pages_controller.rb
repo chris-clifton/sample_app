@@ -8,4 +8,8 @@ class StaticPagesController < ApplicationController
     @page_title = 'Help'
     # render html: "this should be the help page"
   end
+
+  def about
+     @page_title = 'About'
+  end
 end
