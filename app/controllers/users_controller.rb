@@ -9,6 +9,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
     redirect_to root_url and return unless @user.activated?
   end
 
@@ -20,7 +21,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       @user.send_activation_email
-      flash[:success] = "Please activate your account by following the directions in the Account Activation email you've been sent."
+      flash[:success] = "Please activate your account by following the directions in the Account Activation email you've been sent.  Please allow up to 15 minutes for activation email."
       redirect_to root_url
     else
       render 'new'
@@ -53,15 +54,6 @@ class UsersController < ApplicationController
     end
 
     # Before Filters
-
-    # Confirm a logged-in user
-    def logged_in_user
-      unless logged_in?
-        store_location
-        flash[:danger] = "Please log in."
-        redirect_to login_url
-      end
-    end
 
     # Confirms the correct user
     def correct_user
